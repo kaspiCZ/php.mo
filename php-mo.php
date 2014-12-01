@@ -15,7 +15,7 @@
  * More info:
  * https://github.com/josscrowcroft/php.mo
  * 
- * Based on php-msgfmt by Matthias Bauer (Copyright © 2007), a command-line PHP tool
+ * Based on php-msgfmt by Matthias Bauer (Copyright Â© 2007), a command-line PHP tool
  * for converting .po files to .mo.
  * (http://wordpress-soc-2007.googlecode.com/svn/trunk/moeffju/php-msgfmt/msgfmt.php)
  * 
@@ -120,10 +120,10 @@ class PhpMo {
 							case 'msgctxt' :
 							case 'msgid' :
 							case 'msgid_plural' :
-								$temp[$state] .= "\n" . $line;
+								$temp[$state] .= PHP_EOL . $line;
 								break;
 							case 'msgstr' :
-								$temp[$state][sizeof($temp[$state]) - 1] .= "\n" . $line;
+								$temp[$state][sizeof($temp[$state]) - 1] .= PHP_EOL . $line;
 								break;
 							default :
 								// parse error
@@ -176,6 +176,10 @@ class PhpMo {
 			// context is merged into id, separated by EOT (\x04)
 			if (array_key_exists('msgctxt', $entry))
 				$id = $entry['msgctxt'] . "\x04" . $id;
+			// replace header entry \n with PHP_EOL
+			if ($id == "") {
+				$entry['msgstr'] = str_replace('\n', PHP_EOL, $entry['msgstr']);
+			}
 			// plural msgstrs are NUL-separated
 			$str = implode("\x00", $entry['msgstr']);
 			// keep track of offsets
